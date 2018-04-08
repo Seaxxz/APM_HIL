@@ -20,7 +20,7 @@
  *  ArduPilot
  *
  */
-
+#include <SIL/SIL_State.h>
 #include <AP_HAL/AP_HAL.h>
 #include "AP_AHRS.h"
 
@@ -28,7 +28,7 @@
 #include <SITL/SITL.h>
 #endif
 
-#if HAL_CPU_CLASS >= HAL_CPU_CLASS_150
+//#if HAL_CPU_CLASS >= HAL_CPU_CLASS_150
 #include <AP_NavEKF2/AP_NavEKF2.h>
 #include <AP_NavEKF3/AP_NavEKF3.h>
 #include <AP_NavEKF/AP_Nav_Common.h>              // definitions shared by inertial and ekf nav filters
@@ -45,7 +45,7 @@ public:
 
     // Constructor
     AP_AHRS_NavEKF(AP_InertialSensor &ins, AP_Baro &baro,
-                   NavEKF2 &_EKF2, NavEKF3 &_EKF3, Flags flags = FLAG_NONE);
+                   NavEKF2 &_EKF2, NavEKF3 &_EKF3,SIL_State &sitl ,Flags flags = FLAG_NONE);
 
     /* Do not allow copies */
     AP_AHRS_NavEKF(const AP_AHRS_NavEKF &other) = delete;
@@ -258,9 +258,9 @@ private:
     enum EKF_TYPE {EKF_TYPE_NONE=0,
                    EKF_TYPE3=3,
                    EKF_TYPE2=2
-#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+//#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
                    ,EKF_TYPE_SITL=10
-#endif
+//#endif
     };
     EKF_TYPE active_EKF_type(void) const;
 
@@ -290,11 +290,16 @@ private:
 
     // get the index of the current primary IMU
     uint8_t get_primary_IMU_index(void) const;
-    
+
+//add by xxz
+    SIL_State &_sitl;
+    uint32_t _last_body_odm_update_ms = 0;
+    void update_SITL(void);
+
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     SITL::SITL *_sitl;
     uint32_t _last_body_odm_update_ms = 0;
     void update_SITL(void);
-#endif    
-};
 #endif
+};
+//#endif

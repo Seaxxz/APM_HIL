@@ -248,6 +248,8 @@ void Copter::fast_loop()
     // update INS immediately to get current gyro data populated
     ins.update();
 
+    sitl._fdm_input_local();
+
     // run low level rate controllers that only require IMU data
     attitude_control->rate_controller_run();
 
@@ -287,6 +289,8 @@ void Copter::fast_loop()
     if (should_log(MASK_LOG_ANY)) {
         Log_Sensor_Health();
     }
+
+
 }
 
 // rc_loops - reads user input from transmitter/receiver

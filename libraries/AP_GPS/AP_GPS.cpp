@@ -36,7 +36,7 @@
 #include "AP_GPS_UBLOX.h"
 #include "AP_GPS_MAV.h"
 #include "GPS_Backend.h"
-
+#include <../ArduCopter/Copter.h>
 #if HAL_WITH_UAVCAN
 #include <AP_BoardConfig/AP_BoardConfig_CAN.h>
 #include <AP_UAVCAN/AP_UAVCAN.h>
@@ -811,6 +811,15 @@ void AP_GPS::setHIL(uint8_t instance, GPS_Status _status, uint64_t time_epoch_ms
     timing[instance].last_message_time_ms = tnow;
     timing[instance].last_fix_time_ms = tnow;
     _type[instance].set(GPS_TYPE_HIL);
+/*
+static int iii=0;
+iii++;
+if(iii==400)
+{
+    copter.gcs().send_text(MAV_SEVERITY_INFO," %d",istate.location.lat);
+iii=0;
+}
+*/
 }
 
 // set accuracy for HIL

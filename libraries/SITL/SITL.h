@@ -66,7 +66,7 @@ public:
 
     // height above ground
     float height_agl;
-    
+
     static const struct AP_Param::GroupInfo var_info[];
     static const struct AP_Param::GroupInfo var_info2[];
 
@@ -124,7 +124,7 @@ public:
     AP_Int8  pin_mask; // for GPIO emulation
     AP_Float speedup; // simulation speedup
     AP_Int8  odom_enable; // enable visual odomotry data
-    
+
     // wind control
     float wind_speed_active;
     float wind_direction_active;
@@ -158,7 +158,7 @@ public:
     AP_Float temp_flight;
     AP_Float temp_tconst;
     AP_Float temp_baro_factor;
-    
+
     // differential pressure sensor tube order
     AP_Int8 arspd_signflip;
 

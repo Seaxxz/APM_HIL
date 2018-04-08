@@ -99,6 +99,7 @@ void AP_Motors::rc_write(uint8_t chan, uint16_t pwm)
     }
     SRV_Channel::Aux_servo_function_t function = SRV_Channels::get_motor_function(chan);
     SRV_Channels::set_output_pwm(function, pwm);
+//    hal.rcout->write(chan, pwm);
 }
 
 /*

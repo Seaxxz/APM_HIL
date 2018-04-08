@@ -20,7 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Header includes
 ////////////////////////////////////////////////////////////////////////////////
-
+#include <SIL/SIL_State.h>
 #include <cmath>
 #include <stdio.h>
 #include <stdarg.h>
@@ -137,9 +137,9 @@
 #include <SITL/SITL.h>
 #endif
 
-
 class Copter : public AP_HAL::HAL::Callbacks {
 public:
+
     friend class GCS_MAVLINK_Copter;
     friend class GCS_Copter;
     friend class AP_Rally_Copter;
@@ -150,13 +150,13 @@ public:
     friend class AP_AdvancedFailsafe_Copter;
 #endif
     friend class AP_Arming_Copter;
-
+//    friend class SIL_State;
     Copter(void);
 
     // HAL::Callbacks implementation.
     void setup() override;
     void loop() override;
-
+	GCS_Copter &gcs() { return _gcs; }
 private:
     static const AP_FWVersion fwver;
 
@@ -193,7 +193,7 @@ private:
     AP_Baro barometer;
     Compass compass;
     AP_InertialSensor ins;
-
+   SIL_State sitl{ins,gps};
     RangeFinder rangefinder{serial_manager, ROTATION_PITCH_270};
     struct {
         bool enabled:1;
@@ -209,7 +209,7 @@ private:
     // Inertial Navigation EKF
     NavEKF2 EKF2{&ahrs, barometer, rangefinder};
     NavEKF3 EKF3{&ahrs, barometer, rangefinder};
-    AP_AHRS_NavEKF ahrs{ins, barometer, EKF2, EKF3, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
+    AP_AHRS_NavEKF ahrs{ins, barometer, EKF2, EKF3,sitl, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     SITL::SITL sitl;
@@ -253,7 +253,7 @@ private:
 
     // GCS selection
     GCS_Copter _gcs; // avoid using this; use gcs()
-    GCS_Copter &gcs() { return _gcs; }
+
 
     // User variables
 #ifdef USERHOOK_VARIABLES

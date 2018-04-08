@@ -17,7 +17,7 @@
 #include "AP_AHRS.h"
 #include "AP_AHRS_View.h"
 #include <AP_HAL/AP_HAL.h>
-
+#include <../ArduCopter/Copter.h>
 extern const AP_HAL::HAL& hal;
 
 // table of user settable parameters
@@ -125,7 +125,7 @@ const AP_Param::GroupInfo AP_AHRS::var_info[] = {
     // @Description: This controls which NavEKF Kalman filter version is used for attitude and position estimation
     // @Values: 0:Disabled,2:Enable EKF2,3:Enable EKF3
     // @User: Advanced
-    AP_GROUPINFO("EKF_TYPE",  14, AP_AHRS, _ekf_type, 2),
+    AP_GROUPINFO("EKF_TYPE",  14, AP_AHRS, _ekf_type, 10),
 #endif
 
     AP_GROUPEND

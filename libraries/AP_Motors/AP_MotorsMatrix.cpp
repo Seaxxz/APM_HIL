@@ -20,7 +20,7 @@
  */
 #include <AP_HAL/AP_HAL.h>
 #include "AP_MotorsMatrix.h"
-
+#include <../ArduCopter/Copter.h>
 extern const AP_HAL::HAL& hal;
 
 // init
@@ -149,7 +149,7 @@ void AP_MotorsMatrix::output_armed_stabilizing()
     roll_thrust = _roll_in * get_compensation_gain();
     pitch_thrust = _pitch_in * get_compensation_gain();
     yaw_thrust = _yaw_in * get_compensation_gain();
-    throttle_thrust = get_throttle() * get_compensation_gain();
+    throttle_thrust = get_throttle() * get_compensation_gain() ;//
     throttle_avg_max = _throttle_avg_max * get_compensation_gain();
 
     // sanity check throttle is above zero and below current limited throttle
@@ -199,7 +199,6 @@ void AP_MotorsMatrix::output_armed_stabilizing()
             }
         }
     }
-
     // todo: make _yaw_headroom 0 to 1
     yaw_allowed = MAX(yaw_allowed, (float)_yaw_headroom/1000.0f);
 
@@ -262,7 +261,7 @@ void AP_MotorsMatrix::output_armed_stabilizing()
     // add scaled roll, pitch, constrained yaw and throttle for each motor
     for (i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++) {
         if (motor_enabled[i]) {
-            _thrust_rpyt_out[i] = throttle_thrust_best_rpy + thr_adj + rpy_scale*_thrust_rpyt_out[i];
+            _thrust_rpyt_out[i] = throttle_thrust_best_rpy + thr_adj + rpy_scale * _thrust_rpyt_out[i];
         }
     }
 

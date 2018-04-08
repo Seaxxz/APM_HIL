@@ -26,7 +26,6 @@
 namespace SITL {
 
 SITL *_sitl;
-
 ADSB::ADSB(const struct sitl_fdm &_fdm, const char *_home_str) :
     fdm(_fdm)
 {
