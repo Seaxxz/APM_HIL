@@ -20,7 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Header includes
 ////////////////////////////////////////////////////////////////////////////////
-#include <SIL/SIL_State.h>
+
 #include <cmath>
 #include <stdio.h>
 #include <stdarg.h>
@@ -137,6 +137,9 @@
 #include <SITL/SITL.h>
 #endif
 
+#if SIL_MODE == SIL_MODE_SENSORS
+#include <SIL/SIL_State.h>
+#endif
 class Copter : public AP_HAL::HAL::Callbacks {
 public:
 
@@ -193,7 +196,7 @@ private:
     AP_Baro barometer;
     Compass compass;
     AP_InertialSensor ins;
-   SIL_State sitl{ins,gps};
+
     RangeFinder rangefinder{serial_manager, ROTATION_PITCH_270};
     struct {
         bool enabled:1;
@@ -209,7 +212,13 @@ private:
     // Inertial Navigation EKF
     NavEKF2 EKF2{&ahrs, barometer, rangefinder};
     NavEKF3 EKF3{&ahrs, barometer, rangefinder};
-    AP_AHRS_NavEKF ahrs{ins, barometer, EKF2, EKF3,sitl, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
+
+#if SIL_MODE == SIL_MODE_SENSORS
+    SIL_State sitl{ins,gps};
+    AP_AHRS_NavEKF ahrs{ins, barometer, EKF2, EKF3, sitl, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
+#else
+    AP_AHRS_NavEKF ahrs{ins, barometer, EKF2, EKF3, AP_AHRS_NavEKF::FLAG_ALWAYS_USE_EKF};
+#endif
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     SITL::SITL sitl;

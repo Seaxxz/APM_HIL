@@ -20,7 +20,10 @@
  *  ArduPilot
  *
  */
+#if SIL_MODE == SIL_MODE_SENSORS
 #include <SIL/SIL_State.h>
+#endif
+
 #include <AP_HAL/AP_HAL.h>
 #include "AP_AHRS.h"
 
@@ -45,7 +48,11 @@ public:
 
     // Constructor
     AP_AHRS_NavEKF(AP_InertialSensor &ins, AP_Baro &baro,
-                   NavEKF2 &_EKF2, NavEKF3 &_EKF3,SIL_State &sitl ,Flags flags = FLAG_NONE);
+                   NavEKF2 &_EKF2, NavEKF3 &_EKF3,
+#if SIL_MODE == SIL_MODE_SENSORS
+                   SIL_State &sitl ,
+#endif
+                   Flags flags = FLAG_NONE);
 
     /* Do not allow copies */
     AP_AHRS_NavEKF(const AP_AHRS_NavEKF &other) = delete;
@@ -258,9 +265,9 @@ private:
     enum EKF_TYPE {EKF_TYPE_NONE=0,
                    EKF_TYPE3=3,
                    EKF_TYPE2=2
-//#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
+#if SIL_MODE == SIL_MODE_SENSORS
                    ,EKF_TYPE_SITL=10
-//#endif
+#endif
     };
     EKF_TYPE active_EKF_type(void) const;
 
@@ -291,10 +298,11 @@ private:
     // get the index of the current primary IMU
     uint8_t get_primary_IMU_index(void) const;
 
-//add by xxz
+#if SIL_MODE == SIL_MODE_SENSORS
     SIL_State &_sitl;
     uint32_t _last_body_odm_update_ms = 0;
     void update_SITL(void);
+#endif
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     SITL::SITL *_sitl;

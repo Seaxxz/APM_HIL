@@ -248,7 +248,9 @@ void Copter::fast_loop()
     // update INS immediately to get current gyro data populated
     ins.update();
 
+#if SIL_MODE == SIL_MODE_SENSORS
     sitl._fdm_input_local();
+#endif
 
     // run low level rate controllers that only require IMU data
     attitude_control->rate_controller_run();

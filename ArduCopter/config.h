@@ -46,6 +46,12 @@
  #define HIL_MODE        HIL_MODE_DISABLED
 #endif
 
+#define SIL_MODE        SIL_MODE_SENSORS
+
+#ifndef SIL_MODE
+ #define SIL_MODE        SIL_MODE_DISABLED
+#endif
+
 #define MAGNETOMETER ENABLED
 
 #ifndef ARMING_DELAY_SEC
