@@ -70,7 +70,6 @@ void SIL_State::_simulator_servos(Aircraft::sitl_input &input)
     float altitude = 2;
     float wind_speed = 0;
     float wind_direction = 0;
-
         // The EKF does not like step inputs so this LPF keeps it happy.
     wind_speed = wind_speed_active = (0.95f*wind_speed_active) + (0.05f*wind_speed);
     wind_direction = wind_direction_active = (0.95f*wind_direction_active) + (0.05f*wind_direction);

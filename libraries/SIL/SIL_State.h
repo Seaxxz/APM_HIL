@@ -21,7 +21,8 @@ private:
 	AP_InertialSensor &_ins;
     AP_GPS &_gps;
     void _simulator_servos(Aircraft::sitl_input &input);
-    float wind_speed_active;
-    float wind_direction_active;
-    float wind_turbulance;
+    float wind_speed_active = 2.0f;
+    float wind_direction_active = 2.0f;
+    float wind_turbulance = 1.0f;
+
 };
