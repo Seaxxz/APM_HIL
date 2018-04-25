@@ -83,7 +83,7 @@ void SIL_State::_simulator_servos(Aircraft::sitl_input &input)
 
     input.wind.speed = wind_speed;
     input.wind.direction = wind_direction;
-    input.wind.turbulence = wind_turbulance?wind_turbulance:0;
+    input.wind.turbulence = wind_turbulance;
 
     for (i=0; i<SIL_NUM_CHANNELS; i++) {
             input.servos[i] = pwm_output[i];
@@ -95,7 +95,5 @@ void SIL_State::_simulator_servos(Aircraft::sitl_input &input)
             if (input.servos[i] > 2000) input.servos[i] = 2000;
             if (input.servos[i] < 1000) input.servos[i] = 1000;
     }
-
-
 }
 

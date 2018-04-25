@@ -1,7 +1,6 @@
 #include "Copter.h"
 
 #include "GCS_Mavlink.h"
-
 void Copter::gcs_send_heartbeat(void)
 {
     gcs().send_message(MSG_HEARTBEAT);
@@ -134,6 +133,7 @@ NOINLINE void Copter::send_extended_status1(mavlink_channel_t chan)
 void NOINLINE Copter::send_location(mavlink_channel_t chan)
 {
     uint32_t fix_time;
+
     // if we have a GPS fix, take the time as the last fix time. That
     // allows us to correctly calculate velocities and extrapolate
     // positions.
@@ -1581,6 +1581,33 @@ void GCS_MAVLINK_Copter::handleMessage(mavlink_message_t* msg)
 #endif
         break;
     }
+#if SIL_MODE == SIL_MODE_SENSORS
+    case MAVLINK_MSG_ID_HIL_STATE:  // MAV ID: 90
+    {
+    	mavlink_hil_state_t packet;
+    	mavlink_msg_hil_state_decode(msg, &packet);
+
+    	Location loc;          //Home
+    	loc.lat = packet.lat;
+    	loc.lng = packet.lon;
+    	loc.alt = packet.alt/10;
+    	copter.sitl.set_home(loc);
+
+     	float wind_speed = packet.rollspeed;  //wind
+     	float wind_direction = packet.pitchspeed;
+     	float wind_turbulance = packet.yawspeed;
+     	copter.sitl.set_wind(wind_speed,wind_direction,wind_turbulance);
+
+     	float frame_mass = packet.roll;    //frame
+     	float frame_height = packet.pitch;
+     	copter.sitl.set_frame(frame_mass,frame_height);
+
+     	copter.gcs().send_text(MAV_SEVERITY_INFO,"%f %f %f",loc.lat*1e-7,loc.lng*1e-7,loc.alt/100);
+
+
+    	break;
+    }
+#endif
 
 #if HIL_MODE != HIL_MODE_DISABLED
     case MAVLINK_MSG_ID_HIL_STATE:          // MAV ID: 90

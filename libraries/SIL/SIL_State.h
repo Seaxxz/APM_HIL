@@ -17,12 +17,20 @@ public:
     uint16_t pwm_output[SIL_NUM_CHANNELS];
     MultiCopter multicopter;
 	struct Aircraft::sitl_fdm get_sitl_output();
+	void set_home(Location loc)
+	{multicopter.aircraft.home1.alt = loc.alt;
+	 multicopter.aircraft.home1.lat = loc.lat;
+	 multicopter.aircraft.home1.lng = loc.lng;}
+	void set_wind(float wind_speed,float wind_direction,float turbulance)
+	{wind_speed_active=wind_speed;wind_direction_active=wind_direction;wind_turbulance=turbulance;}
+	void set_frame(float frame_mass,float frame_height)
+	{multicopter.aircraft.mass=frame_mass;multicopter.aircraft.frame_height=frame_height;}
 private:
 	AP_InertialSensor &_ins;
     AP_GPS &_gps;
     void _simulator_servos(Aircraft::sitl_input &input);
-    float wind_speed_active = 2.0f;
-    float wind_direction_active = 2.0f;
-    float wind_turbulance = 1.0f;
+    float wind_speed_active = 0;
+    float wind_direction_active = 0;
+    float wind_turbulance = 0;
 
 };

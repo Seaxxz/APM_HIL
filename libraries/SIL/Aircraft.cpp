@@ -76,14 +76,6 @@ void Aircraft::update_dynamics(const Vector3f &rot_accel)
     // velocity relative to air mass, in earth frame
     velocity_air_ef = velocity_ef + wind_ef;
 
-    static int iii=0;
-    iii++;
-    if(iii==400)
-    {
-    	iii=0;
-    	copter.gcs().send_text(MAV_SEVERITY_INFO,"%f %f %f",wind_ef.x,wind_ef.y,wind_ef.z);
-    }
-
     // velocity relative to airmass in body frame
     velocity_air_bf = dcm.transposed() * velocity_air_ef;
 

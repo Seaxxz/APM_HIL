@@ -22,16 +22,20 @@
 #include <../ArduCopter/Copter.h>
 
 void MultiCopter::init()
-
 {
-	aircraft.mass = 1.5f;
-    frame = Frame::find_frame();
-    frame->init(aircraft.mass, 0.51, 15, 4*radians(360));//质量 悬停油门 最终速度 最终旋转速度
-    aircraft.frame_height = 0.1;
-    aircraft.home1.alt = 451 * 100;
-    aircraft.home1.lat = 30.876216 * 1e7;
-    aircraft.home1.lng = 104.161364 * 1e7;
-    aircraft.dcm.from_euler(0.0f, 0.0f, 0.0f);
+	static int num_init=1;
+	if(num_init==1)
+	{
+		num_init++;
+	    frame = Frame::find_frame();
+		aircraft.mass = 1.5f;
+	    aircraft.frame_height = 0.1;
+	    aircraft.home1.alt = 451 * 100;
+	    aircraft.home1.lat = 30.876216 * 1e7;
+	    aircraft.home1.lng = 104.161364 * 1e7;
+		aircraft.dcm.from_euler(0.0f, 0.0f, 0.0f);
+	}
+	frame->init(aircraft.mass, 0.51, 15, 4*radians(360));//质量 悬停油门 最终速度 最终旋转速度
 }
 
 // calculate rotational and linear accelerations
@@ -45,12 +49,7 @@ void MultiCopter::calculate_forces(const struct Aircraft::sitl_input &input, Vec
  */
 void MultiCopter::update(const struct Aircraft::sitl_input &input)
 {
-	static int num_init=1;
-	if(num_init==1)
-	{
-		init();
-		num_init++;
-	}
+	init();
     // get wind vector setup
 	aircraft.update_wind(input);
 
